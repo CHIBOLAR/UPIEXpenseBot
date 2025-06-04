@@ -1,0 +1,232 @@
+{
+  "6667525619": {
+    "food": {
+      "keywords": [
+        "zomato",
+        "swiggy",
+        "restaurant",
+        "food",
+        "lunch",
+        "dinner",
+        "breakfast"
+      ],
+      "emoji": "🍽️"
+    },
+    "transport": {
+      "keywords": [
+        "uber",
+        "ola",
+        "petrol",
+        "taxi",
+        "metro",
+        "bus",
+        "train"
+      ],
+      "emoji": "🚗"
+    },
+    "shopping": {
+      "keywords": [
+        "amazon",
+        "flipkart",
+        "shopping",
+        "mall",
+        "clothes"
+      ],
+      "emoji": "🛒"
+    },
+    "groceries": {
+      "keywords": [
+        "grocery",
+        "vegetables",
+        "milk",
+        "fruits",
+        "supermarket"
+      ],
+      "emoji": "🥕"
+    },
+    "medical": {
+      "keywords": [
+        "hospital",
+        "doctor",
+        "medicine",
+        "pharmacy"
+      ],
+      "emoji": "💊"
+    },
+    "entertainment": {
+      "keywords": [
+        "movie",
+        "cinema",
+        "game",
+        "music",
+        "netflix"
+      ],
+      "emoji": "🎬"
+    },
+    "utilities": {
+      "keywords": [
+        "electricity",
+        "water",
+        "gas",
+        "internet",
+        "mobile"
+      ],
+      "emoji": "⚡"
+    },
+    "miscellaneous": {
+      "keywords": [],
+      "emoji": "📝"
+    },
+    "robot": {
+      "emoji": "🚌",
+      "keywords": [
+        "robot",
+        "arm",
+        "boya"
+      ]
+    },
+    "housing": {
+      "emoji": "🏠",
+      "keywords": [
+        "rent",
+        "mortgage",
+        "property tax",
+        "home insurance"
+      ]
+    }
+  },
+  "6730591053": {
+    "food": {
+      "keywords": [
+        "zomato",
+        "swiggy",
+        "restaurant",
+        "food",
+        "lunch",
+        "dinner",
+        "breakfast",
+        "cafe",
+        "pizza",
+        "burger",
+        "meal",
+        "dining",
+        "eat",
+        "kitchen"
+      ],
+      "emoji": "🍽️"
+    },
+    "transport": {
+      "keywords": [
+        "uber",
+        "ola",
+        "petrol",
+        "taxi",
+        "metro",
+        "bus",
+        "train",
+        "auto",
+        "rickshaw",
+        "fuel",
+        "parking",
+        "toll",
+        "travel",
+        "commute"
+      ],
+      "emoji": "🚗"
+    },
+    "shopping": {
+      "keywords": [
+        "amazon",
+        "flipkart",
+        "shopping",
+        "mall",
+        "clothes",
+        "shoes",
+        "electronics",
+        "mobile",
+        "laptop",
+        "gadget",
+        "purchase"
+      ],
+      "emoji": "🛒"
+    },
+    "groceries": {
+      "keywords": [
+        "grocery",
+        "vegetables",
+        "milk",
+        "fruits",
+        "supermarket",
+        "reliance",
+        "dmart",
+        "big bazaar",
+        "fresh",
+        "organic"
+      ],
+      "emoji": "🥕"
+    },
+    "medical": {
+      "keywords": [
+        "hospital",
+        "doctor",
+        "medicine",
+        "pharmacy",
+        "medical",
+        "health",
+        "clinic",
+        "checkup",
+        "treatment",
+        "tablets"
+      ],
+      "emoji": "💊"
+    },
+    "entertainment": {
+      "keywords": [
+        "movie",
+        "cinema",
+        "game",
+        "music",
+        "netflix",
+        "amazon prime",
+        "hotstar",
+        "spotify",
+        "concert",
+        "show"
+      ],
+      "emoji": "🎬"
+    },
+    "utilities": {
+      "keywords": [
+        "electricity",
+        "water",
+        "gas",
+        "internet",
+        "mobile",
+        "wifi",
+        "broadband",
+        "recharge",
+        "bill",
+        "phone"
+      ],
+      "emoji": "⚡"
+    },
+    "education": {
+      "keywords": [
+        "course",
+        "book",
+        "education",
+        "training",
+        "certification",
+        "udemy",
+        "coursera",
+        "study",
+        "learning"
+      ],
+      "emoji": "📚"
+    },
+    "miscellaneous": {
+      "keywords": [],
+      "emoji": "📝"
+    }
+  }
+}

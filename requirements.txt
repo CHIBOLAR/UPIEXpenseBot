@@ -1,0 +1,10 @@
+python-telegram-bot==20.7
+google-generativeai==0.3.2
+gspread==5.12.4
+google-auth==2.26.2
+pillow==10.2.0
+pytesseract==0.3.10
+python-dotenv==1.0.1
+requests==2.31.0
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.20.9
