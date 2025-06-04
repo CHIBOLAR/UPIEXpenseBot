@@ -1,0 +1,15 @@
+# Railway Environment Variables Template
+# Copy these to your Railway project's environment variables section
+
+# Required - Get from @BotFather on Telegram
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+
+# Required - Get from https://makersuite.google.com/app/apikey  
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Required - Your Google Service Account JSON (entire JSON object as one line)
+GOOGLE_CREDENTIALS={"type":"service_account","project_id":"mumbai-based-location","private_key_id":"399856301b84c22de21e0ad3ba5a2dd224461009","private_key":"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3tvQpspIyEn5p\nmioG43cdr9nr+dpOBhVIUCJ8KpOhHcrk356FmS7Q6cl3r7/fYnBbDxaZmtvcQxW9\nBXGW5Rf6fhTxJx8Ro8E4TR46/Ng7RDJtneH5UkpM1z8p0Vhpvv/Y1oiUfB3+fi45\nZ1itmPKzvxihfOpcThDxEhqtN96eyXCZgn2qmgxLtdVl+GmYPvlB6UZC2doA8RMq\nADuxDpU++8i8vCIH+y35IoFB06P4Iw/vzVYvy8rxj5vx9dv2zEOyFk5Gl5M9MsCO\n9WKa+B4D/cUcr9ZeXMrtN5gPg3jENL4fynWUywusj02qX6ebAWuLL4a3tO2Q6cul\nG/r4m5MXAgMBAAECggEAJyVERIhIz4OSTRUs5Ffen0RDtp0AD8ULDuQIXRXDbD7J\nZ1hg0k3QJHLUW3zm8QXsM/L0mVlehMIEpUi+Ke153QW1l6cC30LZ3pHMIbyTpJlE\n94d/SZ1nuJTa4CG76Zhpsr4PzzfdOkePuOqVAjSHbpaG/I398BowUPXPGl6/wGyF\n6XY6w1N4PlcFLMGuFFTH2IbJlR59l784bLSl/WgqfD7wDuQhUybM1coPY3M4avfj\ndlJCoZi5NbSbPOd4GUn+2WNUCSHwdOo6yjmmey9p1drowclK0tq/PxLS1js3XFB/\nhXtlZK4ttYhelKIMfXnzwfAVe+PvbeI9SaNGM0mXzQKBgQDx4Ru0iALMxusxrMcn\n/efHsGV1Es1GHqDhJVlZUd0eXxS60fLcKfnLCOfic1vUWCGbRiGmnfqLvAbuhbny\n6aMYeZ6TlwdNlq3VLBgDCPF2u00Q7VSD9Ulrv306ACtWjbhzeQP4q9khHkQjMAn9\nGVHObiwvDbRnmk5YCaB83DfPMwKBgQDCcJLHYiTvuN5WVDZPTlZ+ZvajjSgzTj9c\n/9aeI21poZfDFD20t4PBk6Tl47HYEpzsVzeuNzQ3gsoGClrIHz5pzxA+0Nr0sGDm\n8QOCeloVOfSyJ9ui2XW9kwx8946pPPNAlAqVzb0aatZzr/2YjLtxX+2xjBzlS0fT\nfKyLG3e8jQKBgCDdro8MQB0lFkYsrO8BMCJRFKggwuW5ObD+CzL4zavXzZBJAM/r\noDZ3YlLBzAOBaieYEvB53NZp2SNF5mtcVb34oJR7XBGt3Lbvg9+9slmov6MCLI61\noKFUZqaf6UOchCikk+aRKzK10xpY57KNYzFChRxrp0zAic6qmDT/E1JDAoGBAK2M\nzXYpo85UtB9aCx++THWGcZ6J39frf6MCuA1ukbo3Ab6d0nX7Vx7xKb4H/jVeZ7KM\nJqbZn0Hs+2Vo2J7HRG4s49MtmEHPLK71cKyFiOJpWH+sE97HOtB68CqazDtCq9x4\nRvpvKNrrgX7BFxmSg7wuY3qWFTSUfQfHwDppyfYBAoGAaOHnN63/7jZkrPSkoXtg\nOG3xMfvFdn3RmpWjBNlD+y6xA1WyzUhBcpWNUaZLisIS1whCAI9LA62zWv0aIAjV\nVpFA9QlXMrMGugDP7kwbcJinpWILiVpU7ft1cvx94oPbs3pvba6t1SD369mZoUq\nIHZJvqidF9fqwMcozhWl9uk=\n-----END PRIVATE KEY-----\n","client_email":"telegram-bot-sheets@mumbai-based-location.iam.gserviceaccount.com","client_id":"103076247915825742299","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs?gid=103076247915825742299"}
+
+# Railway specific
+RAILWAY_ENVIRONMENT=production
+PORT=8080

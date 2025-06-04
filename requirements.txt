@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 requests==2.31.0
 fuzzywuzzy==0.18.0
 python-Levenshtein==0.20.9
+gunicorn==21.2.0

@@ -8,6 +8,8 @@ import gspread
 from google.oauth2.service_account import Credentials
 from PIL import Image
 from dotenv import load_dotenv
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
 
 # Load environment variables
 load_dotenv()
@@ -143,7 +145,27 @@ def get_google_client():
     """Initialize Google Sheets client"""
     try:
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-        creds = Credentials.from_service_account_file('telegram_service_account.json', scopes=scope)
+        
+        # Check for Railway environment variable first
+        google_creds = os.getenv('GOOGLE_CREDENTIALS')
+        if google_creds:
+            # Parse JSON from environment variable
+            import tempfile
+            creds_dict = json.loads(google_creds)
+            
+            # Create temporary file for credentials
+            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
+                json.dump(creds_dict, temp_file)
+                temp_file_path = temp_file.name
+            
+            creds = Credentials.from_service_account_file(temp_file_path, scopes=scope)
+            os.remove(temp_file_path)  # Clean up
+            logger.info("✅ Google Sheets initialized from environment variable")
+        else:
+            # Fallback to local file for development
+            creds = Credentials.from_service_account_file('telegram_service_account.json', scopes=scope)
+            logger.info("✅ Google Sheets initialized from local file")
+            
         return gspread.authorize(creds)
     except Exception as e:
         logger.error(f"Google client error: {e}")
@@ -718,10 +740,73 @@ def main():
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(CallbackQueryHandler(handle_callback))
     
+def main():
+    """Main function to run the bot"""
+    load_users()
+    load_categories()
+    
+    # Initialize bot
+    app = Application.builder().token(os.getenv('TELEGRAM_BOT_TOKEN')).build()
+    
+    # Add handlers
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("categories", show_categories))
+    app.add_handler(CommandHandler("sheets", setup_sheets))
+    app.add_handler(CommandHandler("stats", show_stats))
+    app.add_handler(CommandHandler("export", export_data))
+    
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('add_category', add_category)],
+        states={ADDING_CATEGORY: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_category)]},
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+    app.add_handler(conv_handler)
+    
+    edit_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(edit_expense, pattern='^edit_')],
+        states={EDITING_EXPENSE: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_edited_expense)]},
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+    app.add_handler(edit_handler)
+    
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    app.add_handler(CallbackQueryHandler(handle_callback))
+    
     print("🚀 Enhanced Expense Bot started successfully!")
     print("Features: Welcome intro, Google Sheets, Edit/Approval workflow, Custom categories")
     
-    app.run_polling()
+    # Health check server for Railway
+    class HealthCheckHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path == '/' or self.path == '/health':
+                self.send_response(200)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b'Bot is running!')
+            else:
+                self.send_response(404)
+                self.end_headers()
+        
+        def log_message(self, format, *args):
+            pass  # Suppress default HTTP logs
+    
+    PORT = int(os.environ.get('PORT', 8080))
+    
+    if os.environ.get('RAILWAY_ENVIRONMENT'):
+        # Production mode - start health check server
+        health_server = HTTPServer(('0.0.0.0', PORT), HealthCheckHandler)
+        health_thread = threading.Thread(target=health_server.serve_forever)
+        health_thread.daemon = True
+        health_thread.start()
+        logger.info(f"Health check server started on port {PORT}")
+        
+        # Use polling for Railway (webhook setup can be complex)
+        app.run_polling()
+    else:
+        # Development mode - use polling
+        app.run_polling()
 
 if __name__ == '__main__':
     main()
