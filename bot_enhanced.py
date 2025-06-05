@@ -490,10 +490,25 @@ def get_google_client():
             # Check for credentials in environment variable first
             service_account_json = os.getenv('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_JSON')
             if service_account_json:
-                # Parse JSON directly from environment variable
-                creds_dict = json.loads(service_account_json)
-                creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
-                logger.info("✅ Google Sheets client initialized from environment variable")
+                try:
+                    # Handle potential base64 encoding
+                    if not service_account_json.strip().startswith('{'):
+                        # Assume it's base64 encoded
+                        import base64
+                        service_account_json = base64.b64decode(service_account_json).decode('utf-8')
+                        logger.info("🔓 Decoded base64 credentials")
+                    
+                    # Parse JSON directly from environment variable
+                    creds_dict = json.loads(service_account_json)
+                    creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
+                    logger.info("✅ Google Sheets client initialized from environment variable")
+                except json.JSONDecodeError as je:
+                    logger.error(f"❌ JSON parsing error: {je}")
+                    logger.error(f"📝 Credential string preview: {service_account_json[:100]}...")
+                    raise
+                except Exception as pe:
+                    logger.error(f"❌ Credential processing error: {pe}")
+                    raise
             else:
                 # Fallback to local file for local development if env var not set
                 # IMPORTANT: Ensure this file is NOT committed to GitHub!
