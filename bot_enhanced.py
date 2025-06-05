@@ -480,14 +480,6 @@ def get_user_categories(user_id):
         logger.info(f"✅ Initialized categories for user {user_id}")
     return user_categories[user_id_str]
 
-import os
-import json
-import tempfile # Import tempfile module
-from google.oauth2.service_account import Credentials
-import gspread # Ensure gspread is imported if not already
-
-# ... (rest of your imports and global variables) ...
-
 def get_google_client():
     """Initialize Google Sheets client with retry logic, supporting environment variable credentials."""
     max_retries = 3
@@ -498,19 +490,14 @@ def get_google_client():
             # Check for credentials in environment variable first
             service_account_json = os.getenv('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS_JSON')
             if service_account_json:
-                # Create a temporary file to store the JSON content
-                with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
-                    temp_file.write(service_account_json)
-                    temp_file_path = temp_file.name
-                
-                creds = Credentials.from_service_account_file(temp_file_path, scopes=scope)
-                # Clean up the temporary file immediately after use
-                os.remove(temp_file_path) 
+                # Parse JSON directly from environment variable
+                creds_dict = json.loads(service_account_json)
+                creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
                 logger.info("✅ Google Sheets client initialized from environment variable")
             else:
                 # Fallback to local file for local development if env var not set
                 # IMPORTANT: Ensure this file is NOT committed to GitHub!
-                local_service_account_path = 'C:\\telegram4.0\\telegram_service_account.json' # Or adjust to your local path
+                local_service_account_path = 'C:\\telegram4.0\\telegram_service_account.json'
                 if os.path.exists(local_service_account_path):
                     creds = Credentials.from_service_account_file(local_service_account_path, scopes=scope)
                     logger.info("✅ Google Sheets client initialized from local file")
@@ -678,6 +665,98 @@ def create_main_menu_keyboard():
         [KeyboardButton("🤖 Chat with AI")]
     ]
     return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+async def handle_add_category_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle text input during the add category flow."""
+    user_id = update.effective_user.id
+    message_text = update.message.text
+    user_state = user_states.get(user_id)
+
+    if not user_state or user_state.get('state') != ADDING_CATEGORY:
+        await update.message.reply_text("🤔 No active category creation session. Please use '📂 Categories' → '➕ Add New Category'.")
+        return
+
+    current_step = user_state.get('step')
+    
+    try:
+        if current_step == ADDING_CATEGORY_NAME:
+            # Validate category name
+            category_name = message_text.strip().lower()
+            if not category_name or len(category_name) > 50:
+                await update.message.reply_text(
+                    "❌ Category name should be 1-50 characters. Please send a valid name:",
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel_add_category")]])
+                )
+                return
+            
+            categories = get_user_categories(user_id)
+            if category_name in categories:
+                await update.message.reply_text(
+                    f"❌ Category '{category_name.title()}' already exists! Please choose a different name:",
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel_add_category")]])
+                )
+                return
+            
+            # Store category name and move to emoji step
+            user_states[user_id]['category_name'] = category_name
+            user_states[user_id]['step'] = ADDING_CATEGORY_EMOJI
+            
+            await update.message.reply_text(
+                f"✅ Category name: '{category_name.title()}'\n\n"
+                "Now send me an emoji for this category (e.g., 🍕, 🚗, 💊):",
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel_add_category")]])
+            )
+            
+        elif current_step == ADDING_CATEGORY_EMOJI:
+            # Validate emoji (simple check)
+            emoji = message_text.strip()
+            if len(emoji) > 5 or not emoji:  # Basic validation
+                emoji = "📝"  # Default emoji if invalid
+            
+            user_states[user_id]['category_emoji'] = emoji
+            user_states[user_id]['step'] = ADDING_CATEGORY_KEYWORDS
+            
+            await update.message.reply_text(
+                f"✅ Emoji: {emoji}\n\n"
+                "Finally, send me some keywords for automatic detection (comma-separated).\n"
+                "Example: 'pizza, restaurant, dominos, food delivery'\n"
+                "Or send 'none' to skip:",
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel_add_category")]])
+            )
+            
+        elif current_step == ADDING_CATEGORY_KEYWORDS:
+            # Process keywords
+            keywords = []
+            if message_text.strip().lower() != 'none':
+                keywords = [k.strip().lower() for k in message_text.split(',') if k.strip()]
+            
+            # Create the category
+            category_name = user_states[user_id]['category_name']
+            category_emoji = user_states[user_id]['category_emoji']
+            
+            categories = get_user_categories(user_id)
+            categories[category_name] = {
+                'emoji': category_emoji,
+                'keywords': keywords
+            }
+            save_categories()
+            
+            # Clean up state
+            del user_states[user_id]
+            
+            await update.message.reply_text(
+                f"🎉 **Category Created Successfully!**\n\n"
+                f"{category_emoji} **{category_name.title()}**\n"
+                f"Keywords: {', '.join(keywords) if keywords else 'None'}\n\n"
+                "Your new category is ready to use!"
+            )
+            
+    except Exception as e:
+        logger.error(f"❌ handle_add_category_input error: {e}")
+        await update.message.reply_text(
+            "❌ Error processing category input. Please try again or cancel.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel_add_category")]])
+        )
 
 # Enhanced message handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
