@@ -1913,15 +1913,6 @@ def main():
         # Create application
         app = Application.builder().token(bot_token).build()
         
-        # Clear any existing webhooks to prevent conflicts
-        try:
-            import asyncio
-            # Use asyncio to run the async webhook deletion
-            asyncio.create_task(app.bot.delete_webhook(drop_pending_updates=True))
-            print("🧹 Cleared any existing webhooks")
-        except Exception as e:
-            print(f"⚠️ Webhook cleanup warning: {e}")
-        
         # Add error handler
         app.add_error_handler(error_handler)
         
@@ -1955,7 +1946,7 @@ def main():
         print("   The bot now uses Gemini AI to make ALL decisions about user interactions.")
         print("   Send any message and Gemini will determine the best response!\n")
         
-        # Start polling
+        # Start polling with webhook cleanup
         app.run_polling(drop_pending_updates=True)
         
     except Exception as e:
