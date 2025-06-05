@@ -3,6 +3,5 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "python3 bot_enhanced.py"
-healthcheckPath = "/"
-healthcheckTimeout = 300
-restartPolicyType = "on_failure"
+# Remove healthcheck for non-web services
+# restartPolicyType = "on_failure"  # This is default, can be omitted

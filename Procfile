@@ -1,1 +1,1 @@
-web: python3 bot_enhanced.py
+worker: python3 bot_enhanced.py
